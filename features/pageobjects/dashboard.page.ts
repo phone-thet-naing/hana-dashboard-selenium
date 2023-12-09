@@ -14,7 +14,20 @@ class DashboardPage {
     }
 
     public async goToDashboard() {
-        await browser.url(dashboardUrl)
+        await browser.maximizeWindow();
+        await browser.url(dashboardUrl);
+    }
+
+    public get firstInterviewResultsTab() {
+        return $('span*=Interview Results')
+    }
+
+    public get secondInterviewResultsTab() {
+        return $('a[href="https://dashboard-uat.hanamicrofinance.net/interview-results"]')
+    }
+
+    public get searchInput() {
+        return $('input[type="search"]')
     }
 
     public async login(username: string, password: string) {
