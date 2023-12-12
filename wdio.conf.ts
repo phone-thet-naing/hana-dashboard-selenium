@@ -31,7 +31,9 @@ export const config: Options.Testrunner = {
     // will be called from there.
     //
     specs: [
-        './features/**/*.feature'
+        './features/**/*.feature',
+        // "./features/dashboard.login.feature",
+        // "./features/interview.search.feature",
     ],
     // Patterns to exclude.
     exclude: [
@@ -53,15 +55,20 @@ export const config: Options.Testrunner = {
     // and 30 processes will get spawned. The property handles how many capabilities
     // from the same test should run tests.
     //
-    maxInstances: 10,
+    maxInstances: 2,
     //
     // If you have trouble getting all important capabilities together, check out the
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://saucelabs.com/platform/platform-configurator
     //
-    capabilities: [{
-        browserName: 'chrome'
-    }],
+    capabilities: [
+        {
+            browserName: 'chrome'
+        },
+        // {
+        //     browserName: 'firefox'
+        // }
+    ],
 
     //
     // ===================
