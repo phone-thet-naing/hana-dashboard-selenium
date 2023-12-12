@@ -60,6 +60,11 @@ class DashboardPage {
         return $('div[id="datatable_processing"]');
     }
 
+    public get interviewStatusFilter() {
+        // return $('span*=Select Interview Status');
+        return $('button[class="multiselect dropdown-toggle btn btn-default"][data-toggle="dropdown"]');
+    }
+
     public async login(username: string, password: string) {
         console.table({
             username: username,

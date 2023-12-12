@@ -37,3 +37,19 @@ Then("I should see a list of interviews", async () => {
     await expect(interviewResultList.length).toBeGreaterThanOrEqual(1);
     await browser.pause(3000);
 })
+
+Then("The interview status should be {}", async (interviewStatus) => {
+    const mapper = {
+        pending: "Pending",
+        change_request: "Change Request",
+        updated: "Updated",
+        ca_reviewed: "CA Reviewed",
+        approve: "Approve",
+        reject: "Reject",
+        undo_ngasaya: "Undo NgaSaYa"
+    }
+    
+    const interviewStatusFilter = await DashboardPage.interviewStatusFilter;
+    console.log("selected value => ", await interviewStatusFilter.getAttribute("title"));
+    await expect(await interviewStatusFilter.getAttribute('titlee')).toBe(mapper[interviewStatus]);    
+})
