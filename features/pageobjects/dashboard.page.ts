@@ -1,3 +1,5 @@
+import { $, browser } from "@wdio/globals"
+
 const dashboardUrl = "https://dashboard-uat.hanamicrofinance.net/login"
 
 class DashboardPage {
@@ -54,6 +56,10 @@ class DashboardPage {
         return $("button*=Feedback");
     }
 
+    public get processAlert() {
+        return $('div[id="datatable_processing"]');
+    }
+
     public async login(username: string, password: string) {
         console.table({
             username: username,
@@ -72,6 +78,22 @@ class DashboardPage {
 
         console.log('clicking sign in button ca')
         await this.loginBtn.click()
+    }
+
+    public async navigateToInterviewResults() {
+        if (await browser.isAlertOpen()) {
+            await browser.dismissAlert();
+        }
+    
+        // Navigate to Interview Results 
+        const firstInterviewResultTab = await this.firstInterviewResultsTab;
+        await firstInterviewResultTab.click();
+        
+        const secondInterviewResultTab = await this.secondInterviewResultsTab;
+        await secondInterviewResultTab.click();
+    
+        const heading = "Interview Results"
+        await expect(await $(`h1*=${heading}`)).toExist();
     }
 }
 

@@ -1,5 +1,6 @@
 import { Then } from "@wdio/cucumber-framework"
 import { expect, $ } from "@wdio/globals"
+import DashboardPage from "../pageobjects/dashboard.page.js"
 
 Then("I should see {} title", async function (title: string) {
     await expect(await $('span[class="logo-lg"]')).toHaveText(title)
@@ -22,4 +23,17 @@ Then("I should see result interview with {}", async (input: string | number) => 
 Then("I should see {} option", async (option: string) => {
     const label = await $(`div*=${option}`)
     await expect(label).toExist()
+})
+
+Then("I should see a list of interviews", async () => {
+    const interviewResultList = await browser.waitUntil(async () => {
+        if (!(await DashboardPage.processAlert.isDisplayed())) {
+            const itemList = await $$('tr');
+            return itemList;
+        }
+        return false;
+    })
+
+    await expect(interviewResultList.length).toBeGreaterThanOrEqual(1);
+    await browser.pause(3000);
 })

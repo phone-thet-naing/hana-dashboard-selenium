@@ -13,4 +13,4 @@ Feature: Reviewing a Specific Interview
 
     Examples: 
       | username | password | clientName |
-      | chanmk   |      123 | Aye Su Min |
+      | chanmk   |      123 | Naing Si   |

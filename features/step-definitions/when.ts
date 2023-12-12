@@ -39,23 +39,7 @@ When("I click on Feedback To FO option", async () => {
 })
 
 When("I navigate to Interview Results tab", async () => {
-    console.log("I click on Interview Results tab")
-    console.log("isAlertOpen", await browser.isAlertOpen())
-
-    // If an alert box pops up, dismiss it
-    if (await browser.isAlertOpen()) {
-        await browser.dismissAlert();
-    }
-
-    // Navigate to Interview Results 
-    const firstInterviewResultTab = await DashboardPage.firstInterviewResultsTab;
-    await firstInterviewResultTab.click();
-    
-    const secondInterviewResultTab = await DashboardPage.secondInterviewResultsTab;
-    await secondInterviewResultTab.click();
-
-    const heading = "Interview Results"
-    await expect(await $(`h1*=${heading}`)).toExist()
+    await DashboardPage.navigateToInterviewResults();
 })
 
 When("I click on View CA Assessment credentials: {word} {word}", async (username, password) => {
