@@ -6,7 +6,7 @@ import { getCurrentDateTime, writeJSON } from "../../utility/util.js"
 export interface NewData {
     time: string,
     interviewId: string,
-    request: string
+    // request: string
 }
 
 Then("I should see {} title", async function (title: string) {
@@ -28,12 +28,27 @@ Then("I should see {} heading", async (heading: string) => {
     const newData: NewData = {
         time: getCurrentDateTime(),
         interviewId: interviewId,
-        request: 'change_request'
     }
 
     writeJSON(newData);
 
-    console.log(currentUrl, '\n', 'interview id => ', interviewId);
+    console.log('interview id => ', interviewId);
+})
+
+Then("I should be navigated to Interview Detail", async () => {
+    await expect(await $(`h1*=Interview Result Details`)).toExist()
+
+    // Get the interview id from link
+    const currentUrl = await browser.getUrl();
+    const interviewId = currentUrl.split('/')[currentUrl.split('/').length - 1];
+
+    // Create JavaScript object
+    const newData: NewData = {
+        time: getCurrentDateTime(),
+        interviewId: interviewId,
+    }
+
+    writeJSON(newData);
 })
 
 Then("I should see result interview with {}", async (input: string | number) => {
@@ -42,8 +57,9 @@ Then("I should see result interview with {}", async (input: string | number) => 
 })
 
 Then("I should see {} option", async (option: string) => {
-    const label = await $(`div*=${option}`)
-    await expect(label).toExist()
+    const label = await $(`div*=${option}`);
+    await expect(label).toExist();
+
 })
 
 Then("I should see a list of interviews", async () => {
@@ -79,4 +95,8 @@ Then("The interview status should be {}", async (interviewStatus) => {
 
     const interviewStatusFilter = await DashboardPage.interviewStatusFilter;
     await expect(await interviewStatusFilter.getAttribute('title')).toBe(mapper[interviewStatus]);  
+})
+
+Then("I should see a success alert", async () => {
+    await expect(await DashboardPage.changeRequestSuccessAlert).toBeDisplayed();
 })

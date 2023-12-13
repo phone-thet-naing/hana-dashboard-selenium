@@ -61,7 +61,6 @@ class DashboardPage {
     }
 
     public get interviewStatusFilter() {
-        // return $('span*=Select Interview Status');
         return $('button[class="multiselect dropdown-toggle btn btn-default"][data-toggle="dropdown"]');
     }
 
@@ -71,6 +70,10 @@ class DashboardPage {
     
     public get btnReset() {
         return $('button[id="btnResetTable"]');
+    }
+
+    public get changeRequestSuccessAlert() {
+        return $('div*=change_request successfully.')
     }
 
     public async login(username: string, password: string) {

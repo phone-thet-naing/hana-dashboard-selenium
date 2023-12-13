@@ -2,6 +2,8 @@ import { When } from "@wdio/cucumber-framework"
 import { browser } from "@wdio/globals"
 
 import DashboardPage from "../pageobjects/dashboard.page.js"
+import { NewData } from "./then.js";
+import { addInterviewStatus, getCurrentDateTime, writeJSON } from "../../utility/util.js";
 
 When("I login with {word} and {word}", async (username, password) => {
     await DashboardPage.login(username, password)
@@ -52,10 +54,13 @@ When("I click on View CA Assessment credentials: {word} {word}", async (username
     const title = await $('h3*=Welcome to CA Assessment')
     await title.waitForDisplayed({ timeoutMsg: "CA Assessment title was not displayed" })
 
-    await DashboardPage.caLogin(username, password)
+    await DashboardPage.caLogin(username, password)    
 })
 
 When("I choose Feedback To FO option", async () => {
+    // Add interview status to json
+    addInterviewStatus('change_request')
+
     const parentMenuIcon = await DashboardPage.threeDotMenu;
     await parentMenuIcon.waitForDisplayed({
         timeoutMsg: `${parentMenuIcon} was not displayed`
@@ -74,7 +79,6 @@ When("I choose Feedback To FO option", async () => {
 
     const confirmBtn = await DashboardPage.feedbackToFoConfirmBtn;
     await confirmBtn.click();
-    await browser.pause(3000);
 })
 
 When("I filter interviews with interview status {}", async (interviewStatus) => {
