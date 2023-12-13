@@ -78,18 +78,20 @@ When("I choose Feedback To FO option", async () => {
 })
 
 When("I filter interviews with interview status {}", async (interviewStatus) => {
-    const interviewStatusOptions = await $$('input[type="checkbox"]');
-    console.log('option count => ', interviewStatusOptions.length);
-
     const interviewStatusFilter = await DashboardPage.interviewStatusFilter;
+    console.log('Initial selected title on interview status filter => ', await interviewStatusFilter.getAttribute('title'));
+    const interviewStatusOptions = await $$('input[type="checkbox"]');
+    console.log('interview status option count => ', interviewStatusOptions.length);
+    const selectedStatus = await $(`input[type="checkbox"][value="${interviewStatus}"]`);    
 
     await interviewStatusFilter.waitForClickable({ timeoutMsg: "Interview Status Filter was Not Clickable" });
     await interviewStatusFilter.click();
-    const selectedStatus = await $(`input[type="checkbox"][value="${interviewStatus}"]`);
-    console.log('selected status element => ', await selectedStatus.getValue(), await selectedStatus.getText());
     await selectedStatus.waitForClickable({ timeout: 5000, timeoutMsg: `${interviewStatus} was not clickable` });
     await selectedStatus.click();
 
     // close the filter
     await interviewStatusFilter.click();
+
+    // Search with selected filter options
+    await (await DashboardPage.btnFilter).click();
 })

@@ -4,8 +4,11 @@ Feature: General Test
         Given I have successfully logged in with <username> and <password>
         When I navigate to Interview Results tab
         And I filter interviews with interview status <interviewStatus>
-        Then I should see a list of interviews
         And The interview status should be <interviewStatus>
+        And I search <clientName> in search box
+        Then I should see a list of interviews
+        When I click on View button
+        Then I should see Interview Result Details heading
 
         Examples:
         | username | password | clientName | interviewStatus |

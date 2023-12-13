@@ -65,6 +65,14 @@ class DashboardPage {
         return $('button[class="multiselect dropdown-toggle btn btn-default"][data-toggle="dropdown"]');
     }
 
+    public get btnFilter() {
+        return $('button[id="btnSearchTable"]');
+    }
+    
+    public get btnReset() {
+        return $('button[id="btnResetTable"]');
+    }
+
     public async login(username: string, password: string) {
         console.table({
             username: username,
