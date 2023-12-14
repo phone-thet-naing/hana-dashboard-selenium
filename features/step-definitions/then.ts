@@ -98,5 +98,14 @@ Then("The interview status should be {}", async (interviewStatus) => {
 })
 
 Then("I should see a success alert", async () => {
+    await (await DashboardPage.changeRequestSuccessAlert).waitForDisplayed({ timeout: 10000, timeoutMsg: "Change Request Success Message Was Not Found!"});
     await expect(await DashboardPage.changeRequestSuccessAlert).toBeDisplayed();
+})
+
+Then("the CA Review Form should appear", async () => {
+    await expect(await DashboardPage.caReviewFormHeader).toBeDisplayed();
+})
+
+Then("I should be navigated to CA Dashboard", async () => {
+    await expect(await DashboardPage.interviewResultDetailInCaDashboard).toExist();
 })

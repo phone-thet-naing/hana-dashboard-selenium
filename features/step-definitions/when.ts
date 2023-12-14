@@ -45,21 +45,35 @@ When("I navigate to Interview Results tab", async () => {
 })
 
 When("I click on View CA Assessment credentials: {word} {word}", async (username, password) => {
+    const notFoundMsg = await $('h1*=404 Not Found');
+
     const button = await $(`=View CA Assessment`)
     await button.click()
 
+    // Switch focus on the new window tab
     const handles = await browser.getWindowHandles()
     await browser.switchToWindow(handles[1])
 
+    // If 404 occurs, throw error and fail the test
+    if (await notFoundMsg.isDisplayed()) {
+        console.log("404 Not Found error occured")
+
+        const error = "Unexpected 404 Not Found Error Occurred!"
+
+        throw error;
+    }
+
+    // In test automation, since a blank Chrome profile is used, we have to login for the CA dashboard as well.    
     const title = await $('h3*=Welcome to CA Assessment')
     await title.waitForDisplayed({ timeoutMsg: "CA Assessment title was not displayed" })
 
     await DashboardPage.caLogin(username, password)    
 })
 
-When("I choose Feedback To FO option", async () => {
+When("I choose Feedback To FO", async () => {
+    console.log("Reached")
     // Add interview status to json
-    addInterviewStatus('change_request')
+    addInterviewStatus('change_request');
 
     const parentMenuIcon = await DashboardPage.threeDotMenu;
     await parentMenuIcon.waitForDisplayed({
@@ -81,6 +95,48 @@ When("I choose Feedback To FO option", async () => {
     await confirmBtn.click();
 })
 
+When("I choose {} option", async (option) => {
+    // Possible option = View Assessment, Undo Ngasaya, Feedback To FO
+    const mapper = {
+        "View Assessment": "ca_review",
+        "Undo Ngasaya": "undo_ngasaya",
+        "Feedback To FO": "change_request"
+    }
+
+    // Add interview status to json
+    addInterviewStatus(mapper[option]);
+
+    // Open three dot menu
+    const parentMenuIcon = await DashboardPage.threeDotMenu;
+    await parentMenuIcon.waitForClickable({
+        timeoutMsg: `Three-dot menu was not clickable`
+    })
+    await parentMenuIcon.click();
+
+    // Might need, dont delete
+    const buttonMapper = {
+        "View Assessment": "viewAssessmentOptionBtn",
+        "Undo Ngasaya": "undoNgasayaOptionBtn",
+        "Feedback To FO": "feedbackToFoOptionBtn"
+    }
+
+    let selectedOption: any;
+    // Setting the assigned option button based on input 
+    if (option === "View Assessment") {
+        selectedOption = await DashboardPage.viewAssessmentOptionBtn; 
+    } else if (option === "Undo Ngasaya") {
+        selectedOption = await DashboardPage.undoNgasayaOptionBtn;
+    } else {
+        selectedOption = await DashboardPage.feedbackToFoOptionBtn;
+    }
+
+    // Click the selected option
+    await selectedOption.waitForClickable({
+        timeoutMsg: option + " button was not clickable after timeout"
+    });
+    await selectedOption.click();
+})
+
 When("I filter interviews with interview status {}", async (interviewStatus) => {
     const interviewStatusFilter = await DashboardPage.interviewStatusFilter;
     console.log('Initial selected title on interview status filter => ', await interviewStatusFilter.getAttribute('title'));
@@ -98,4 +154,69 @@ When("I filter interviews with interview status {}", async (interviewStatus) => 
 
     // Search with selected filter options
     await (await DashboardPage.btnFilter).click();
+})
+
+When("I fill ca review form", async () => {
+    const data = {
+        mcixFamilyMember: "yes",
+        // mcixFamilyMember: "no",
+        loan_purpose: "Agriculture",
+        // loan_purpose: "Livestock",
+        // loan_purpose: "Production",
+        // loan_purpose: "Service",
+        // loan_purpose: "Trade",
+        business_photo: "yes",
+        // business_photo: "no",
+    }
+
+    // choosing mcix family members
+    if (data.mcixFamilyMember === "yes") {
+        await expect(await DashboardPage.mcixFamilyMembersYesRadio).toBeClickable();
+        await (await DashboardPage.mcixFamilyMembersYesRadio).click();
+    } else {
+        await expect(await DashboardPage.mcixFamilyMembersNoRadio).toBeClickable();
+        await (await DashboardPage.mcixFamilyMembersNoRadio).click();
+    }
+
+    // Choosing Loan Purpose
+    const loanPurposeMenu = await DashboardPage.loanPurposeOptionMenu;
+    await loanPurposeMenu.click();
+
+    const chosenOption = await $(`div*=${data.loan_purpose}`);
+    await chosenOption.click();
+
+    // Choosing business description
+    const businessDescriptionMenu = await (await $(`label*=${data.loan_purpose} (Business Description)`)).nextElement();
+    await expect(businessDescriptionMenu).toBeClickable();
+    
+    const options = await (await $('div[class="css-26l3qy-menu"]')).$$('div');
+    console.log("Option count: ", options.length)
+    const selectedSubOption = options[0];
+    await selectedSubOption.click();
+
+    // Setting value in ချေးငွေကို မည်သည့်နေရာတွင်အသုံးပြုမည်နည်း input
+    const placeToUseLoan = await (await $('label*=ချေးငွေကို မည်သည့်နေရာတွင်အသုံးပြုမည်နည်း')).nextElement();
+    await placeToUseLoan.setValue("Automated Test");
+
+    // Setting value in ယခုလုပ်ငန်းလုပ်ကိုင်သည်မှာ နှစ်မည်မျှကြာခဲ့သနည်း။ input
+    const businessPeriod = await (await $('label*=ယခုလုပ်ငန်းလုပ်ကိုင်သည်မှာ နှစ်မည်မျှကြာခဲ့သနည်း။')).nextElement();
+    await businessPeriod.setValue(1); 
+
+    // Choosing business photo radio option
+    if (data.business_photo === "yes") {
+        await expect(await DashboardPage.businessPhotoYesRadio).toBeClickable()
+        await (await DashboardPage.businessPhotoYesRadio).click()
+    } else {
+        await expect(await DashboardPage.businessPhotoNoRadio).toBeClickable()
+        await (await DashboardPage.businessPhotoNoRadio).click()
+    }
+
+    // CA approved amount
+    const caApprovedAmountInput = await (await $('label*=CA မှ ထောက်ခံသော ပမာဏ')).nextElement();
+    await caApprovedAmountInput.setValue(100000);
+
+    await expect(await DashboardPage.caFormSubmitBtn).toBeClickable();
+    await (await DashboardPage.caFormSubmitBtn).click();
+
+    await browser.pause(5000);
 })

@@ -48,6 +48,15 @@ class DashboardPage {
         return $(`div*=Feedback To FO`)
     }
 
+    public get viewAssessmentOptionBtn() {
+        return $('#root > div > div.d-flex.flex-column.p-3.shadow.border.ca-radius.ca-popup-top.w-auto.ca-open > div > nav > div:nth-child(1)')
+        // return $('div*=View Assessment')
+    }
+    
+    public get undoNgasayaOptionBtn() {
+        return $("div*=Undo Ngasaya");
+    }
+
     public get feedbackToFoCommentBox() {
         return $('body > div:nth-child(13) > ons-dialog > div.dialog > div > div > div.row.p-1 > div.col-12.mb-2 > textarea');
     }
@@ -74,6 +83,47 @@ class DashboardPage {
 
     public get changeRequestSuccessAlert() {
         return $('div*=change_request successfully.')
+    }
+
+    public get caReviewForm() {
+        return $('div[class="ca-desktop-form"]')
+    }
+
+    public get caReviewFormHeader() {
+        return $('h4*=Create CA Assessment')
+    }
+
+    public get loanPurposeSubMenu() {
+        return $('#root > div > div.ca-desktop-form.ca-desktop-form-large.p-2.pt-2 > div.ca-form-container.ca-form-desktop-container > div > div:nth-child(1) > div:nth-child(2) > div > div > div.css-1hwfws3 > div.css-1uccc91-singleValue');
+    }
+
+    public get mcixFamilyMembersYesRadio() {
+        return $('input[type="radio"][name="ca_mcix_family_members"][value="1001"]')
+    }
+
+    public get mcixFamilyMembersNoRadio() {
+        return $('input[type="radio"][name="ca_mcix_family_members"][value="1002"]')
+    }
+
+    public get businessPhotoYesRadio() {
+        return $('input[type="radio"][name="ca_business_photo"][value="1001"]');
+    }
+
+    public get businessPhotoNoRadio() {
+        return $('input[type="radio"][name="ca_business_photo"][value="1002"]');
+    }
+
+    public get caFormSubmitBtn() {
+        return $('button*=Submit');
+    }
+
+    public get loanPurposeOptionMenu() {
+        // return $('div[class="26l3qy-menu"]');
+        return $('#root > div > div.ca-desktop-form.p-2.pt-2 > div.ca-form-container.ca-form-desktop-container > div > div:nth-child(1) > div:nth-child(1) > div > div > div.css-1hwfws3')
+    }
+
+    public get interviewResultDetailInCaDashboard() {
+        return $("h3*=Interview Result Detail");
     }
 
     public async login(username: string, password: string) {
