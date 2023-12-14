@@ -109,3 +109,9 @@ Then("the CA Review Form should appear", async () => {
 Then("I should be navigated to CA Dashboard", async () => {
     await expect(await DashboardPage.interviewResultDetailInCaDashboard).toExist();
 })
+
+Then("I should see the success message: {}", async (message) => {
+    await expect(await $('div*=' + message)).toBeDisplayed();
+
+    await browser.pause(5000);
+})

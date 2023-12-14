@@ -188,10 +188,13 @@ When("I fill ca review form", async () => {
     // Choosing business description
     const businessDescriptionMenu = await (await $(`label*=${data.loan_purpose} (Business Description)`)).nextElement();
     await expect(businessDescriptionMenu).toBeClickable();
+    await businessDescriptionMenu.click();
     
-    const options = await (await $('div[class="css-26l3qy-menu"]')).$$('div');
-    console.log("Option count: ", options.length)
-    const selectedSubOption = options[0];
+    // const options = await (await $('div[class="css-26l3qy-menu"]')).$$('div');
+    // console.log("Option count: ", options.length)
+    // const desiredBusinessDescriptionOption = "1000 - လယ်ယာ စိုက်ပျိုးရေး စပါး"
+    const desiredBusinessDescriptionOption = "1103 - နှစ်ရှည်သီးနှံ စိုက်ပျိုးရေး ထောပတ်ပင်"
+    const selectedSubOption = await $('div*=' + desiredBusinessDescriptionOption);
     await selectedSubOption.click();
 
     // Setting value in ချေးငွေကို မည်သည့်နေရာတွင်အသုံးပြုမည်နည်း input
@@ -218,5 +221,16 @@ When("I fill ca review form", async () => {
     await expect(await DashboardPage.caFormSubmitBtn).toBeClickable();
     await (await DashboardPage.caFormSubmitBtn).click();
 
-    await browser.pause(5000);
+    // await browser.pause(5000);
 })
+
+When("I insrt call center queries", async function () {
+    const databaseGroup = await $('li[class="last navGroup"]');
+    await expect(databaseGroup).toBeClickable();
+    await databaseGroup.click();
+    
+    // const dbUatDashboard = await $('li[class="database database"]');
+    const dbUatDashboard = await $('=uat_dashboard');
+    await expect(dbUatDashboard).toBeClickable();
+    await dbUatDashboard.click();
+ })

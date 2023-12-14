@@ -12,7 +12,7 @@ Feature: Making CA Review
         And I choose View Assessment option
         Then the CA Review Form should appear
         And I fill ca review form
-        # Then I should see the success message
+        Then I should see the success message: CA assessment create/update successfully.
 
         Examples: 
         | username | password | clientName |
