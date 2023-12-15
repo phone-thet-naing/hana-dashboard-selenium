@@ -1,9 +1,10 @@
 import { When } from "@wdio/cucumber-framework"
 import { browser } from "@wdio/globals"
+import * as fs from "fs"
 
 import DashboardPage from "../pageobjects/dashboard.page.js"
 import { NewData } from "./then.js";
-import { addInterviewStatus, getCurrentDateTime, writeJSON } from "../../utility/util.js";
+import { addInterviewStatus, getCallCenterQuery, getCurrentDateTime, writeJSON } from "../../utility/util.js";
 
 When("I login with {word} and {word}", async (username, password) => {
     await DashboardPage.login(username, password)
@@ -149,7 +150,7 @@ When("I filter interviews with interview status {}", async (interviewStatus) => 
     await selectedStatus.waitForClickable({ timeout: 5000, timeoutMsg: `${interviewStatus} was not clickable` });
     await selectedStatus.click();
 
-    // close the filter
+    // Close the filter
     await interviewStatusFilter.click();
 
     // Search with selected filter options
@@ -224,13 +225,11 @@ When("I fill ca review form", async () => {
     // await browser.pause(5000);
 })
 
-When("I insrt call center queries", async function () {
-    const databaseGroup = await $('li[class="last navGroup"]');
-    await expect(databaseGroup).toBeClickable();
-    await databaseGroup.click();
-    
-    // const dbUatDashboard = await $('li[class="database database"]');
-    const dbUatDashboard = await $('=uat_dashboard');
-    await expect(dbUatDashboard).toBeClickable();
-    await dbUatDashboard.click();
+When("I insrt call center queries: {}", async function ( interviewListInput ) {
+    // interviewList = ["52d1cca6-abbb-440d-8181-0d36bb6eed83", "988adb9d-db12-4e18-bb08-3d416880dd39"];
+    const interviewList: string[] = interviewListInput.split(" ").join("").split("[").join("").split("]").join("").split(",");
+
+    await DashboardPage.insertCallCenterQuery(interviewList);
+
+    await browser.pause(5000);
  })

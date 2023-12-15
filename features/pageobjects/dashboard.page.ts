@@ -1,4 +1,6 @@
 import { $, browser } from "@wdio/globals"
+import * as fs from "fs"
+import { getCallCenterQuery, getCurrentDateTime } from "../../utility/util.js"
 
 const dashboardUrl = "https://dashboard-uat.hanamicrofinance.net/login"
 
@@ -160,6 +162,62 @@ class DashboardPage {
     
         const heading = "Interview Results"
         await expect(await $(`h1*=${heading}`)).toExist();
+    }
+
+    public async insertCallCenterQuery(interviewList: string[]) {
+        const uatPlusIcon = await $('li.last.navGroup img.ic_b_plus');
+        await expect(uatPlusIcon).toBeClickable();
+        await uatPlusIcon.click();
+
+        const dbUatDashboard = await $('a*=uat_dashboard');
+        await expect(dbUatDashboard).toBeClickable();
+        await dbUatDashboard.click();
+
+        const actionEventsTableName = await $('a*=action_events');
+        await actionEventsTableName.waitForExist({ timeoutMsg: "Action Event table not visible" });
+
+        // await browser.pause(10000)
+
+        const sqlTab = await $('a*=SQL');
+        await expect(sqlTab).toBeClickable();
+        await sqlTab.click();
+
+        // Converting Interview IDs into Queries
+        // Inserting Call Center Query Data
+        const callCenterQueries = interviewList.map((interview_id) => {
+            const currentDateTime = getCurrentDateTime("yyyy-mm-dd");
+            
+            const queryData = {
+                interview_id: interview_id, 
+                call_date: currentDateTime, 
+                created_at: currentDateTime, 
+                updated_at: currentDateTime, 
+                ca_assessment_date: currentDateTime
+            }
+
+            const callCenterQuery = getCallCenterQuery(queryData);
+
+            return callCenterQuery;
+        })    
+
+        const submitQueryBtn = await $('input[id="button_submit_query"][value="Go"]');
+        await submitQueryBtn.waitForClickable({ timeoutMsg: "Submit button not clickable" });
+
+        fs.appendFile('./data/query.txt', callCenterQueries.join("\n"), function (error) {
+            if (error) throw error;
+            console.log("File saved!")
+        })
+
+        await browser.keys(callCenterQueries.join("\n"));
+
+        return;
+
+        await submitQueryBtn.click();
+
+        const successMsg = await $('img.icon.ic_s_success');
+        await expect(successMsg).toExist();
+
+        console.log("Success message: ", await (await $('div.success')).getText());
     }
 }
 
