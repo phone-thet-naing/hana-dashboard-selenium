@@ -1,8 +1,14 @@
 import { $, browser } from "@wdio/globals"
 import * as fs from "fs"
-import { getCallCenterQuery, getCurrentDateTime } from "../../utility/util.js"
+import { addInterviewStatus, getCallCenterQuery, getCurrentDateTime } from "../../utility/util.js"
 
 const dashboardUrl = "https://dashboard-uat.hanamicrofinance.net/login"
+
+interface CAFormData {
+    mcixFamilyMember: string;
+    loan_purpose: string;
+    business_photo: string;
+}
 
 class DashboardPage {
     public get username() {
@@ -44,6 +50,10 @@ class DashboardPage {
 
     public get changeRequestCommentBox() {
         return $('textarea.form-control[placeholder="Leave a comment here"]')
+    }
+
+    public get commentBox() {
+        return $('textarea[name="comment"]');
     }
 
     public get feedbackToFoOptionBtn() {
@@ -128,6 +138,10 @@ class DashboardPage {
         return $("h3*=Interview Result Detail");
     }
 
+    public get btnApprove() {
+        return $('button=Approve');
+    }
+
     public async login(username: string, password: string) {
         console.table({
             username: username,
@@ -210,14 +224,170 @@ class DashboardPage {
 
         await browser.keys(callCenterQueries.join("\n"));
 
-        return;
-
         await submitQueryBtn.click();
+    }
 
-        const successMsg = await $('img.icon.ic_s_success');
-        await expect(successMsg).toExist();
+    public async createCAForm(data: CAFormData) {
+        try {            
+            // choosing mcix family members
+            if (data.mcixFamilyMember === "yes") {
+                await expect(await this.mcixFamilyMembersYesRadio).toBeClickable();
+                await (await this.mcixFamilyMembersYesRadio).click();
+            } else {
+                await expect(await this.mcixFamilyMembersNoRadio).toBeClickable();
+                await (await this.mcixFamilyMembersNoRadio).click();
+            }
 
-        console.log("Success message: ", await (await $('div.success')).getText());
+            // Choosing Loan Purpose
+            const loanPurposeMenu = await this.loanPurposeOptionMenu;
+            await loanPurposeMenu.click();
+
+            const chosenOption = await $(`div*=${data.loan_purpose}`);
+            await chosenOption.click();
+
+            // Choosing business description
+            const businessDescriptionMenu = await (await $(`label*=${data.loan_purpose} (Business Description)`)).nextElement();
+            await expect(businessDescriptionMenu).toBeClickable();
+            await businessDescriptionMenu.click();
+            
+            // const options = await (await $('div[class="css-26l3qy-menu"]')).$$('div');
+            // console.log("Option count: ", options.length)
+            // const desiredBusinessDescriptionOption = "1000 - လယ်ယာ စိုက်ပျိုးရေး စပါး"
+            const desiredBusinessDescriptionOption = "1103 - နှစ်ရှည်သီးနှံ စိုက်ပျိုးရေး ထောပတ်ပင်"
+            const selectedSubOption = await $('div*=' + desiredBusinessDescriptionOption);
+            await selectedSubOption.click();
+
+            // Setting value in ချေးငွေကို မည်သည့်နေရာတွင်အသုံးပြုမည်နည်း input
+            const placeToUseLoan = await (await $('label*=ချေးငွေကို မည်သည့်နေရာတွင်အသုံးပြုမည်နည်း')).nextElement();
+            await placeToUseLoan.setValue("Automated Test");
+
+            // Setting value in ယခုလုပ်ငန်းလုပ်ကိုင်သည်မှာ နှစ်မည်မျှကြာခဲ့သနည်း။ input
+            const businessPeriod = await (await $('label*=ယခုလုပ်ငန်းလုပ်ကိုင်သည်မှာ နှစ်မည်မျှကြာခဲ့သနည်း။')).nextElement();
+            await businessPeriod.setValue(1); 
+
+            // Choosing business photo radio option
+            if (data.business_photo === "yes") {
+                await expect(await this.businessPhotoYesRadio).toBeClickable()
+                await (await this.businessPhotoYesRadio).click()
+            } else {
+                await expect(await this.businessPhotoNoRadio).toBeClickable()
+                await (await this.businessPhotoNoRadio).click()
+            }
+
+            // CA approved amount
+            const caApprovedAmountInput = await (await $('label*=CA မှ ထောက်ခံသော ပမာဏ')).nextElement();
+            await caApprovedAmountInput.setValue(100000);
+
+            await (await this.caFormSubmitBtn).waitForClickable({ timeout: 5000, timeoutMsg: "CA Form Submit Button was not Clickable" });
+            await (await this.caFormSubmitBtn).click();
+        } catch (error) {
+            console.log("Create CA Form Error: ", error);
+        }
+    }
+
+    public async gotoCAassessment(username: string, password: string) {
+        const notFoundMsg = await $('h1*=404 Not Found');
+
+        const button = await $(`=View CA Assessment`)
+        await button.click()
+    
+        // Switch focus on the new window tab
+        const handles = await browser.getWindowHandles();
+        await browser.switchToWindow(handles[1])
+    
+        // If 404 occurs, throw error and fail the test
+        if (await notFoundMsg.isDisplayed()) {
+            console.log("404 Not Found error occured")
+    
+            const error = "Unexpected 404 Not Found Error Occurred!"
+    
+            throw error;
+        }
+    
+        // In test automation, since a blank Chrome profile is used, we have to login for the CA dashboard as well.    
+        const title = await $('h3*=Welcome to CA Assessment')
+        await title.waitForDisplayed({ timeoutMsg: "CA Assessment title was not displayed" })
+    
+        await this.caLogin(username, password)           
+    }
+
+    public async gotoCAassessmentWhenDoingMultipleInterviews(username: string, password: string) {
+        // Take the link to `View CA Assessment` button
+        const button = await $(`=View CA Assessment`);
+        await expect(button).toHaveAttribute("href");
+        const caAssessmentBtnUrl = await button.getAttribute("href");
+        // await button.click()
+
+        // Switch to CA Dashboard View
+        await browser.newWindow(caAssessmentBtnUrl, { windowName: "ca_view" });
+    
+        /*
+        // Switch focus on the new window tab
+        const handles = await browser.getWindowHandles();
+        await browser.switchToWindow(handles[1])
+        */
+    
+        const notFoundMsg = await $('h1*=404 Not Found');
+        // If 404 occurs, throw error and fail the test
+        if (await notFoundMsg.isDisplayed()) {
+            console.log("404 Not Found error occured")
+    
+            const error = "Unexpected 404 Not Found Error Occurred!"
+    
+            throw error;
+        }
+    
+        // In test automation, since a blank Chrome profile is used, we have to login for the CA dashboard as well.    
+        const title = await $('h3*=Welcome to CA Assessment');
+
+        try {
+            await title.waitForDisplayed({ timeout: 5000 });
+            console.log("Welcome to CA Assessment was displayed, performing caLogin");
+            await this.caLogin(username, password);           
+        } catch (error) {
+            console.log("Welcome to CA Assessment was not displayed");
+        } 
+    }
+
+    public async chooseCAassessmentOption() {
+        // Add interview status to json
+        addInterviewStatus("View Assessment");
+
+        // Open three dot menu
+        const parentMenuIcon = await this.threeDotMenu;
+
+        try {
+            await parentMenuIcon.waitForExist({
+                timeout: 10000,
+                timeoutMsg: `Three-dot menu was not visible after 10 seconds`
+            })
+            await parentMenuIcon.click();
+        } catch (error) {
+            console.error("Three dot menu was not clicked!");
+            throw error
+        }        
+
+        const caAssessmentBtn = await this.viewAssessmentOptionBtn;
+        // Click the selected option
+
+        try {
+            await caAssessmentBtn.waitForClickable({
+                timeout: 5000,
+                timeoutMsg: "CA Assessment button was not clickable after timeout"
+            });
+            await caAssessmentBtn.click();  
+        } catch (error) {
+            console.error("CA Assessment button was not clicked!");
+            throw error;
+        }    
+    }
+
+    public async approveMultipleInterviews() {
+        // Enter comment in comment box
+        const commentBox = await $('textarea[name="comment"]');
+        await commentBox.setValue("Testing Approve");
+
+        await browser.pause(3000);
     }
 }
 

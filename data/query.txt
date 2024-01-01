@@ -1303,4 +1303,72 @@ VALUES
         'ptn',
         '2023-12-15 14:59:10',
         '2023-12-15 14:59:10'
-    );
+    );INSERT INTO
+    dp_call_center(id, interview_id, call_status, call_date, remark, uploaded_by, created_at, updated_at)
+    VALUES
+        (NULL, '52d1cca6-abbb-440d-8181-0d36bb6eed83', '2', '2023-12-15 15:15:01', 'remark', 'ptn', '2023-12-15 15:15:01', '2023-12-15 15:15:01' );
+
+    INSERT INTO
+        dp_call_center_history ( id, interview_id, area_no, region, office, client_id, loan_id, group_name, phone_no1, phone_no2, success_call_phone_no, officer_name, client_name, father_name, nrc, ca_assessment_date, call_date, call_status, remark, uploaded_by, created_at, updated_at )
+    VALUES
+        ( NULL, '52d1cca6-abbb-440d-8181-0d36bb6eed83', 'QA Testing', 'Region 1', 'Thein Phyu', '407396', '000000', '_', '9687879625', '-', '-', 'Aung Aung', 'U Min Thu', 'U Thu Win', '၁/မကန()၀၀၀၀၀၅', '2023-12-15 15:15:01', '2023-12-15 15:15:01', '2', 'remark', 'ptn', '2023-12-15 15:15:01', '2023-12-15 15:15:01' );
+INSERT INTO
+    dp_call_center(id, interview_id, call_status, call_date, remark, uploaded_by, created_at, updated_at)
+    VALUES
+        (NULL, '988adb9d-db12-4e18-bb08-3d416880dd39', '2', '2023-12-15 15:15:01', 'remark', 'ptn', '2023-12-15 15:15:01', '2023-12-15 15:15:01' );
+
+    INSERT INTO
+        dp_call_center_history ( id, interview_id, area_no, region, office, client_id, loan_id, group_name, phone_no1, phone_no2, success_call_phone_no, officer_name, client_name, father_name, nrc, ca_assessment_date, call_date, call_status, remark, uploaded_by, created_at, updated_at )
+    VALUES
+        ( NULL, '988adb9d-db12-4e18-bb08-3d416880dd39', 'QA Testing', 'Region 1', 'Thein Phyu', '407396', '000000', '_', '9687879625', '-', '-', 'Aung Aung', 'U Min Thu', 'U Thu Win', '၁/မကန()၀၀၀၀၀၅', '2023-12-15 15:15:01', '2023-12-15 15:15:01', '2', 'remark', 'ptn', '2023-12-15 15:15:01', '2023-12-15 15:15:01' );INSERT INTO
+    dp_call_center(id, interview_id, call_status, call_date, remark, uploaded_by, created_at, updated_at)
+    VALUES
+        (NULL, '78421578-5c4a-417a-8d78-50189b0a32ba', '2', '2023-12-18 15:47:04', 'remark', 'ptn', '2023-12-18 15:47:04', '2023-12-18 15:47:04' );
+
+    INSERT INTO
+        dp_call_center_history ( id, interview_id, area_no, region, office, client_id, loan_id, group_name, phone_no1, phone_no2, success_call_phone_no, officer_name, client_name, father_name, nrc, ca_assessment_date, call_date, call_status, remark, uploaded_by, created_at, updated_at )
+    VALUES
+        ( NULL, '78421578-5c4a-417a-8d78-50189b0a32ba', 'QA Testing', 'Region 1', 'Thein Phyu', '407396', '000000', '_', '9687879625', '-', '-', 'Aung Aung', 'U Min Thu', 'U Thu Win', '၁/မကန()၀၀၀၀၀၅', '2023-12-18 15:47:04', '2023-12-18 15:47:04', '2', 'remark', 'ptn', '2023-12-18 15:47:04', '2023-12-18 15:47:04' );
+INSERT INTO
+    dp_call_center(id, interview_id, call_status, call_date, remark, uploaded_by, created_at, updated_at)
+    VALUES
+        (NULL, 'b258045a-3dc6-4808-9208-6eede0b8841c', '2', '2023-12-18 15:47:04', 'remark', 'ptn', '2023-12-18 15:47:04', '2023-12-18 15:47:04' );
+
+    INSERT INTO
+        dp_call_center_history ( id, interview_id, area_no, region, office, client_id, loan_id, group_name, phone_no1, phone_no2, success_call_phone_no, officer_name, client_name, father_name, nrc, ca_assessment_date, call_date, call_status, remark, uploaded_by, created_at, updated_at )
+    VALUES
+        ( NULL, 'b258045a-3dc6-4808-9208-6eede0b8841c', 'QA Testing', 'Region 1', 'Thein Phyu', '407396', '000000', '_', '9687879625', '-', '-', 'Aung Aung', 'U Min Thu', 'U Thu Win', '၁/မကန()၀၀၀၀၀၅', '2023-12-18 15:47:04', '2023-12-18 15:47:04', '2', 'remark', 'ptn', '2023-12-18 15:47:04', '2023-12-18 15:47:04' );INSERT INTO
+    dp_call_center(id, interview_id, call_status, call_date, remark, uploaded_by, created_at, updated_at)
+    VALUES
+        (NULL, '78421578-5c4a-417a-8d78-50189b0a32ba', '2', '2023-12-18 16:10:40', 'remark', 'ptn', '2023-12-18 16:10:40', '2023-12-18 16:10:40' );
+
+    INSERT INTO
+        dp_call_center_history ( id, interview_id, area_no, region, office, client_id, loan_id, group_name, phone_no1, phone_no2, success_call_phone_no, officer_name, client_name, father_name, nrc, ca_assessment_date, call_date, call_status, remark, uploaded_by, created_at, updated_at )
+    VALUES
+        ( NULL, '78421578-5c4a-417a-8d78-50189b0a32ba', 'QA Testing', 'Region 1', 'Thein Phyu', '407396', '000000', '_', '9687879625', '-', '-', 'Aung Aung', 'U Min Thu', 'U Thu Win', '၁/မကန()၀၀၀၀၀၅', '2023-12-18 16:10:40', '2023-12-18 16:10:40', '2', 'remark', 'ptn', '2023-12-18 16:10:40', '2023-12-18 16:10:40' );
+INSERT INTO
+    dp_call_center(id, interview_id, call_status, call_date, remark, uploaded_by, created_at, updated_at)
+    VALUES
+        (NULL, 'b258045a-3dc6-4808-9208-6eede0b8841c', '2', '2023-12-18 16:10:40', 'remark', 'ptn', '2023-12-18 16:10:40', '2023-12-18 16:10:40' );
+
+    INSERT INTO
+        dp_call_center_history ( id, interview_id, area_no, region, office, client_id, loan_id, group_name, phone_no1, phone_no2, success_call_phone_no, officer_name, client_name, father_name, nrc, ca_assessment_date, call_date, call_status, remark, uploaded_by, created_at, updated_at )
+    VALUES
+        ( NULL, 'b258045a-3dc6-4808-9208-6eede0b8841c', 'QA Testing', 'Region 1', 'Thein Phyu', '407396', '000000', '_', '9687879625', '-', '-', 'Aung Aung', 'U Min Thu', 'U Thu Win', '၁/မကန()၀၀၀၀၀၅', '2023-12-18 16:10:40', '2023-12-18 16:10:40', '2', 'remark', 'ptn', '2023-12-18 16:10:40', '2023-12-18 16:10:40' );INSERT INTO
+    dp_call_center(id, interview_id, call_status, call_date, remark, uploaded_by, created_at, updated_at)
+    VALUES
+        (NULL, 'adb6c7aa-d97a-4591-9d92-a9dcaed86c23', '2', '2023-12-20 11:37:40', 'remark', 'ptn', '2023-12-20 11:37:40', '2023-12-20 11:37:40' );
+
+    INSERT INTO
+        dp_call_center_history ( id, interview_id, area_no, region, office, client_id, loan_id, group_name, phone_no1, phone_no2, success_call_phone_no, officer_name, client_name, father_name, nrc, ca_assessment_date, call_date, call_status, remark, uploaded_by, created_at, updated_at )
+    VALUES
+        ( NULL, 'adb6c7aa-d97a-4591-9d92-a9dcaed86c23', 'QA Testing', 'Region 1', 'Thein Phyu', '407396', '000000', '_', '9687879625', '-', '-', 'Aung Aung', 'U Min Thu', 'U Thu Win', '၁/မကန()၀၀၀၀၀၅', '2023-12-20 11:37:40', '2023-12-20 11:37:40', '2', 'remark', 'ptn', '2023-12-20 11:37:40', '2023-12-20 11:37:40' );
+INSERT INTO
+    dp_call_center(id, interview_id, call_status, call_date, remark, uploaded_by, created_at, updated_at)
+    VALUES
+        (NULL, 'd115cbc2-ae9a-469e-bbd0-aae313b85a9f', '2', '2023-12-20 11:37:40', 'remark', 'ptn', '2023-12-20 11:37:40', '2023-12-20 11:37:40' );
+
+    INSERT INTO
+        dp_call_center_history ( id, interview_id, area_no, region, office, client_id, loan_id, group_name, phone_no1, phone_no2, success_call_phone_no, officer_name, client_name, father_name, nrc, ca_assessment_date, call_date, call_status, remark, uploaded_by, created_at, updated_at )
+    VALUES
+        ( NULL, 'd115cbc2-ae9a-469e-bbd0-aae313b85a9f', 'QA Testing', 'Region 1', 'Thein Phyu', '407396', '000000', '_', '9687879625', '-', '-', 'Aung Aung', 'U Min Thu', 'U Thu Win', '၁/မကန()၀၀၀၀၀၅', '2023-12-20 11:37:40', '2023-12-20 11:37:40', '2', 'remark', 'ptn', '2023-12-20 11:37:40', '2023-12-20 11:37:40' );

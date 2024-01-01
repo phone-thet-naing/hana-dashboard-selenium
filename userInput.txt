@@ -1,0 +1,5 @@
+yes
+Hello World
+This is a game.
+this is not a game.
+How do you know I am a game?

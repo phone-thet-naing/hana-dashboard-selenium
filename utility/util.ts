@@ -125,76 +125,16 @@ export function addInterviewStatus(status: string) {
 
 export function getCallCenterQuery({interview_id, call_date, created_at, updated_at, ca_assessment_date}) {
     return `INSERT INTO
-    dp_call_center(
-        id,
-        interview_id,
-        call_status,
-        call_date,
-        remark,
-        uploaded_by,
-        created_at,
-        updated_at
-    )
-VALUES
-    (
-        NULL,
-        '${interview_id}',
-        '2',
-        '${call_date}',
-        'remark',
-        'ptn',
-        '${created_at}',
-        '${updated_at}'
-    );
+    dp_call_center(id, interview_id, call_status, call_date, remark, uploaded_by, created_at, updated_at)
+    VALUES
+        (NULL, '${interview_id}', '2', '${call_date}', 'remark', 'ptn', '${created_at}', '${updated_at}' );
 
-INSERT INTO
-    dp_call_center_history (
-        id,
-        interview_id,
-        area_no,
-        region,
-        office,
-        client_id,
-        loan_id,
-        group_name,
-        phone_no1,
-        phone_no2,
-        success_call_phone_no,
-        officer_name,
-        client_name,
-        father_name,
-        nrc,
-        ca_assessment_date,
-        call_date,
-        call_status,
-        remark,
-        uploaded_by,
-        created_at,
-        updated_at
-    )
-VALUES
-    (
-        NULL,
-        '${interview_id}',
-        'QA Testing',
-        'Region 1',
-        'Thein Phyu',
-        '407396',
-        '000000',
-        '_',
-        '9687879625',
-        '-',
-        '-',
-        'Aung Aung',
-        'U Min Thu',
-        'U Thu Win',
-        '၁/မကန()၀၀၀၀၀၅',
-        '${ca_assessment_date}',
-        '${call_date}',
-        '2',
-        'remark',
-        'ptn',
-        '${created_at}',
-        '${updated_at}'
-    );`
+    INSERT INTO
+        dp_call_center_history ( id, interview_id, area_no, region, office, client_id, loan_id, group_name, phone_no1, phone_no2, success_call_phone_no, officer_name, client_name, father_name, nrc, ca_assessment_date, call_date, call_status, remark, uploaded_by, created_at, updated_at )
+    VALUES
+        ( NULL, '${interview_id}', 'QA Testing', 'Region 1', 'Thein Phyu', '407396', '000000', '_', '9687879625', '-', '-', 'Aung Aung', 'U Min Thu', 'U Thu Win', '၁/မကန()၀၀၀၀၀၅', '${ca_assessment_date}', '${call_date}', '2', 'remark', 'ptn', '${created_at}', '${updated_at}' );`
+}
+
+export function getCurrentEpochTime() {
+    return Math.floor(new Date().getTime() / 1000);
 }

@@ -112,6 +112,13 @@ Then("I should be navigated to CA Dashboard", async () => {
 
 Then("I should see the success message: {}", async (message) => {
     await expect(await $('div*=' + message)).toBeDisplayed();
+})
 
-    await browser.pause(5000);
+Then("I should see success message for Query Insert", async () => {
+    const successMsg = await $('img.icon.ic_s_success');
+    await expect(successMsg).toExist();
+})
+
+Then("The screen should match the screen shot", async function () {
+    
 })
