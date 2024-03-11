@@ -13,8 +13,9 @@
   "scripts": {
     "wdio": "wdio run ./wdio.conf.ts",
     "change-request": "npm run wdio -- --spec features/change.request.specific.interview.feature",
-    "ca-review": "npm run wdio -- --spec features/ca.review.feature", 
+    "ca-review": "npm run wdio -- --spec features/ca.review.feature",
     "callcenter": "npm run wdio -- --spec features/database.feature",
-    "approve": "npm run wdio -- --spec features/approve.feature"
+    "approve": "npm run wdio -- --spec features/approve.feature",
+    "undo": "npm run wdio -- --spec features/undo.ngasaya.feature"
   }
 }

@@ -7,6 +7,6 @@ Feature: Automating Database
 
     Examples: 
       | interviewList                                                                |
-      | [adb6c7aa-d97a-4591-9d92-a9dcaed86c23, d115cbc2-ae9a-469e-bbd0-aae313b85a9f] |
+      | [72013b8a-e31b-40a7-a62a-b5d4d57dc8f8, 531039ea-d60f-491e-b367-823ac4605fc5, 1eb85a24-3319-4929-97ae-607d8bd37d32, a5e19e61-8152-4711-9960-43df607b1762] |
 
       # Format: [<id1>, <id2>]

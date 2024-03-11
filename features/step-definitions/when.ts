@@ -21,7 +21,7 @@ When("I click on Interview Results tab", async () => {
     // Navigate to Interview Results 
     const firstInterviewResultTab = await DashboardPage.firstInterviewResultsTab;
     await firstInterviewResultTab.click();
-    
+
     const secondInterviewResultTab = await DashboardPage.secondInterviewResultsTab;
     await secondInterviewResultTab.click();
 })
@@ -49,7 +49,6 @@ When("I click on View CA Assessment credentials: {word} {word}", async (username
 })
 
 When("I choose Feedback To FO", async () => {
-    console.log("Reached")
     // Add interview status to json
     addInterviewStatus('change_request');
 
@@ -64,9 +63,9 @@ When("I choose Feedback To FO", async () => {
         timeoutMsg: `${label} was not clickable`
     })
     await label.click();
-    
-    const commentBox = await DashboardPage.feedbackToFoCommentBox;    
-    await commentBox.waitForClickable({ timeoutMsg: "comment box was not clickable after 5s", timeout: 5000})
+
+    const commentBox = await DashboardPage.feedbackToFoCommentBox;
+    await commentBox.waitForClickable({ timeoutMsg: "comment box was not clickable after 5s", timeout: 5000 })
     await commentBox.setValue("Change Request Cucumber Test");
 
     const confirmBtn = await DashboardPage.feedbackToFoConfirmBtn;
@@ -98,10 +97,11 @@ When("I choose {} option", async (option) => {
         "Feedback To FO": "feedbackToFoOptionBtn"
     }
 
-    let selectedOption: any;
+    let selectedOption: WebdriverIO.Element;
+    console.log("Reached here!");
     // Setting the assigned option button based on input 
     if (option === "View Assessment") {
-        selectedOption = await DashboardPage.viewAssessmentOptionBtn; 
+        selectedOption = await DashboardPage.viewAssessmentOptionBtn;
     } else if (option === "Undo Ngasaya") {
         selectedOption = await DashboardPage.undoNgasayaOptionBtn;
     } else {
@@ -113,14 +113,19 @@ When("I choose {} option", async (option) => {
         timeoutMsg: option + " button was not clickable after timeout"
     });
     await selectedOption.click();
+
+    const commentBox = await $('textarea[class="form-control"]');
+    const comment = option === "View Assessment" ? "CA Assessment Sample"
+        : option === "Undo Ngasaya" ? "Undo Ngasaya Sample"
+            : option === "Feedback To FO" ? "Not Valid"
+                : "None of the above";
+    await commentBox.setValue(comment);
 })
 
 When("I filter interviews with interview status {}", async (interviewStatus) => {
     const interviewStatusFilter = await DashboardPage.interviewStatusFilter;
-    console.log('Initial selected title on interview status filter => ', await interviewStatusFilter.getAttribute('title'));
     const interviewStatusOptions = await $$('input[type="checkbox"]');
-    console.log('interview status option count => ', interviewStatusOptions.length);
-    const selectedStatus = await $(`input[type="checkbox"][value="${interviewStatus}"]`);    
+    const selectedStatus = await $(`input[type="checkbox"][value="${interviewStatus}"]`);
 
     await interviewStatusFilter.waitForClickable({ timeoutMsg: "Interview Status Filter was Not Clickable" });
     await interviewStatusFilter.click();
@@ -132,6 +137,25 @@ When("I filter interviews with interview status {}", async (interviewStatus) => 
 
     // Search with selected filter options
     await (await DashboardPage.btnFilter).click();
+})
+
+When("I set interview status to {}", async (interviewStatus) => {
+    const interviewStatusFilter = await DashboardPage.interviewStatusFilter;
+    const interviewStatusOptions = await $$('input[type="checkbox"]');
+    const selectedStatus = await $(`input[type="checkbox"][value="${interviewStatus}"]`);
+
+    await interviewStatusFilter.waitForClickable({ timeoutMsg: "Interview Status Filter was Not Clickable" });
+    await interviewStatusFilter.click();
+    await selectedStatus.waitForClickable({ timeout: 5000, timeoutMsg: `${interviewStatus} was not clickable` });
+    await selectedStatus.click();
+
+    // Close the filter
+    await interviewStatusFilter.click();
+})
+
+When("I filter", async () => {
+    const filterBtn = await DashboardPage.btnFilter;
+    await filterBtn.click();
 })
 
 When("I create CA Review Form", async function () {
@@ -150,15 +174,15 @@ When("I create CA Review Form", async function () {
     await DashboardPage.createCAForm(data);
 })
 
-When("I insert call center queries: {}", async function ( interviewListInput ) {
+When("I insert call center queries: {}", async function (interviewListInput) {
     const interviewList: string[] = interviewListInput.split(" ").join("").split("[").join("").split("]").join("").split(",");
 
     await DashboardPage.insertCallCenterQuery(interviewList);
 
     await browser.pause(5000);
- })
+})
 
- When("I make multiple CA Reviews: CA credentials {}, {}", async function (username, password) {
+When("I make multiple CA Reviews: CA credentials {}, {}", async function (username, password) {
     const interviewList = await browser.waitUntil(async function () {
         const btnList = await $$('a=View');
         const dataProcessingAlert = await DashboardPage.processAlert;
@@ -196,10 +220,10 @@ When("I insert call center queries: {}", async function ( interviewListInput ) {
 
         // Create CA Assessment
         await CAdashboardPage.createCAassessment();
-        
+
         // Should see success message
         try {
-            await (await $('div*=CA assessment create/update successfully.')).waitForDisplayed({ timeout: 5000, timeoutMsg: "CA Assessment Creation Success Message was not Displayed" }); 
+            await (await $('div*=CA assessment create/update successfully.')).waitForDisplayed({ timeout: 5000, timeoutMsg: "CA Assessment Creation Success Message was not Displayed" });
         } catch (error) {
             const screenshotName = "ca_review_message_" + getCurrentEpochTime();
             await browser.saveScreenshot(`./screenshots/${screenshotName}.png`);
@@ -227,9 +251,9 @@ When("I insert call center queries: {}", async function ( interviewListInput ) {
     //     console.log("Interview Status " + j + 1 + " ", await status.getText());
     //     await expect(await status.getText()).toBe("ca_reviewed");
     // }
- })
+})
 
- When("I approve multiple interviews: CAC credentials {}, {}", async function (username, password) {
+When("I approve multiple interviews: CAC credentials {}, {}", async function (username, password) {
     // Fetch the interview list after the processing alert disappears
     const interviewList = await browser.waitUntil(async function () {
         const btnList = await $$('a=View');
@@ -288,12 +312,18 @@ When("I insert call center queries: {}", async function ( interviewListInput ) {
             const approvedAmountInput = await $('input[name="approve_amount"]');
             await approvedAmountInput.setValue(approvedAmount);
         } catch (error) {
-            
+
         }
 
         await (await DashboardPage.btnApprove).click();
 
         await browser.pause(3000);
-        return;        
+        return;
     }
- })
+})
+
+When("I set FO to {}", async (foName) => {
+    const foFilter = await DashboardPage.foFilter;
+    console.log(await foFilter.getText()); // expected value: -- Select FO name --
+    await foFilter.selectByVisibleText(foName);
+})

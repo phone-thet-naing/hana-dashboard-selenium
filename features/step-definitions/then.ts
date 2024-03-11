@@ -63,23 +63,15 @@ Then("I should see {} option", async (option: string) => {
 })
 
 Then("I should see a list of interviews", async () => {
-    try {
-        const interviewResultList = await browser.waitUntil(async () => {
-            if (!(await DashboardPage.processAlert.isDisplayed())) {
-                const itemList = await $$('tr');
-                return itemList;
-            }
-            return false;
-        })
-    
-        await expect(interviewResultList.length).toBeGreaterThanOrEqual(1);
+    const interviewResultList = await browser.waitUntil(async () => {
+        if (!(await DashboardPage.processAlert.isDisplayed())) {
+            const itemList = await $$('tr');
+            return itemList;
+        }
+        return false;
+    })
 
-        console.log('Interview count => ', interviewResultList.length);
-    } catch (error) {
-        console.log("Test failed due to ", error.message, '\n', error);
-
-        throw error;
-    }
+    await expect(interviewResultList.length).toBeGreaterThanOrEqual(1);
 })
 
 Then("The interview status should be {}", async (interviewStatus) => {
@@ -94,11 +86,11 @@ Then("The interview status should be {}", async (interviewStatus) => {
     }
 
     const interviewStatusFilter = await DashboardPage.interviewStatusFilter;
-    await expect(await interviewStatusFilter.getAttribute('title')).toBe(mapper[interviewStatus]);  
+    await expect(await interviewStatusFilter.getAttribute('title')).toBe(mapper[interviewStatus]);
 })
 
 Then("I should see a success alert", async () => {
-    await (await DashboardPage.changeRequestSuccessAlert).waitForDisplayed({ timeout: 10000, timeoutMsg: "Change Request Success Message Was Not Found!"});
+    await (await DashboardPage.changeRequestSuccessAlert).waitForDisplayed({ timeout: 10000, timeoutMsg: "Change Request Success Message Was Not Found!" });
     await expect(await DashboardPage.changeRequestSuccessAlert).toBeDisplayed();
 })
 
@@ -120,5 +112,5 @@ Then("I should see success message for Query Insert", async () => {
 })
 
 Then("The screen should match the screen shot", async function () {
-    
+
 })

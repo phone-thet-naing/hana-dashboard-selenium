@@ -2,7 +2,8 @@ import { $, browser } from "@wdio/globals"
 import * as fs from "fs"
 import { addInterviewStatus, getCallCenterQuery, getCurrentDateTime } from "../../utility/util.js"
 
-const dashboardUrl = "https://dashboard-uat.hanamicrofinance.net/login"
+const dashboardUrl: string = "https://dashboard-uat.hanamicrofinance.net/login"
+// const dashboardUrl: string = "https://www.youtube.com/";
 
 interface CAFormData {
     mcixFamilyMember: string;
@@ -83,6 +84,10 @@ class DashboardPage {
 
     public get interviewStatusFilter() {
         return $('button[class="multiselect dropdown-toggle btn btn-default"][data-toggle="dropdown"]');
+    }
+
+    public get foFilter() {
+        return $('select[id="filterFOStation"]')
     }
 
     public get btnFilter() {
