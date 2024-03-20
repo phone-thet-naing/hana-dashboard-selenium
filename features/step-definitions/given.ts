@@ -1,7 +1,9 @@
-import { Given } from "@wdio/cucumber-framework"
+import {Given, When} from "@wdio/cucumber-framework"
 
 import DashboardPage from "../pageobjects/dashboard.page.js"
 import getUserInput from "../../utility/terminalPrompt.js"
+import {browser} from "@wdio/globals";
+import dashboardPage from "../pageobjects/dashboard.page.js";
 
 Given("I am on login page", async () => {
     await DashboardPage.goToDashboard()
@@ -42,4 +44,54 @@ Given("I have logged into database", async () => {
 
     // Insert Call Center Data
     
+})
+
+Given("I am on CA Login for {} and {}", async (interviewId, caId) => {
+
+    const credentials = {
+        username: "chanmk",
+        password: "train"
+    }
+
+    await browser.maximizeWindow();
+    await browser.url(`https://ca-uat.hanamicrofinance.net/caassessment/${interviewId}/${caId}`);
+
+    async function waitForElementExistence(selector: string, timeoutMs: number) {
+        const startTime = Date.now();
+
+        while (Date.now() - startTime < timeoutMs) {
+            const isExisting = await $(selector).isExisting();
+            if (isExisting) {
+                return true; // Element found within the duration
+            }
+            await browser.pause(100); // Add a small pause between checks
+        }
+
+        return false; // Element not found before timeout
+    }
+
+    const elementSelector = 'h3=Welcome to CA Assessment';
+    const timeoutMs = 5000; // 5 seconds
+
+    const isElementFound = await waitForElementExistence(elementSelector, timeoutMs);
+
+    if (isElementFound) {
+        await DashboardPage.caLogin(credentials.username, credentials.password);
+    }
+})
+
+Given("I am on {} details", async (interviewClientId) => {
+    await browser.url(`https://dashboard-uat.hanamicrofinance.net/data-changed-interview-clients/${interviewClientId}`);
+    
+    const selector = `button[type="submit"]`;
+    const timeout = 5000;
+    const loginScreenFound = await DashboardPage.waitForElementExistence(selector, timeout);
+
+    console.log("screen found: ", loginScreenFound);
+
+    if (loginScreenFound) {
+        await DashboardPage.login("chanmk", "train");
+    } else {
+        await browser.maximizeWindow();
+    }
 })

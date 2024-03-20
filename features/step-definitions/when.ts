@@ -1,9 +1,15 @@
 import { When } from "@wdio/cucumber-framework"
-import { browser } from "@wdio/globals"
+import { browser } from "@wdio/globals";
 
 import DashboardPage from "../pageobjects/dashboard.page.js"
 import { addInterviewStatus, getCallCenterQuery, getCurrentDateTime, getCurrentEpochTime, writeJSON } from "../../utility/util.js";
 import CAdashboardPage from "../pageobjects/ca-dashboard.page.js";
+
+interface MapperType {
+    "View Assessment": string
+    "Undo Ngasaya": string
+    "Feedback To FO": string
+}
 
 When("I login with {word} and {word}", async (username, password) => {
     await DashboardPage.login(username, password)
@@ -72,9 +78,9 @@ When("I choose Feedback To FO", async () => {
     await confirmBtn.click();
 })
 
-When("I choose {} option", async (option) => {
+When("I choose {} option", async (option: string) => {
     // Possible option = View Assessment, Undo Ngasaya, Feedback To FO
-    const mapper = {
+    const mapper: MapperType = {
         "View Assessment": "ca_review",
         "Undo Ngasaya": "undo_ngasaya",
         "Feedback To FO": "change_request"
@@ -327,3 +333,4 @@ When("I set FO to {}", async (foName) => {
     console.log(await foFilter.getText()); // expected value: -- Select FO name --
     await foFilter.selectByVisibleText(foName);
 })
+

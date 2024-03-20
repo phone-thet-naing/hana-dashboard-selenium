@@ -1,6 +1,7 @@
 import { $, browser } from "@wdio/globals"
 import * as fs from "fs"
 import { addInterviewStatus, getCallCenterQuery, getCurrentDateTime } from "../../utility/util.js"
+import caDashboardPage from "./ca-dashboard.page.js";
 
 const dashboardUrl: string = "https://dashboard-uat.hanamicrofinance.net/login"
 // const dashboardUrl: string = "https://www.youtube.com/";
@@ -9,11 +10,12 @@ interface CAFormData {
     mcixFamilyMember: string;
     loan_purpose: string;
     business_photo: string;
+    descriptionOption: string;
 }
 
 class DashboardPage {
     public get username() {
-        return $('input[name="user_name"]')
+        return $('input[name="user_name"]');
     }
 
     public get caUsernameInput() {
@@ -147,6 +149,15 @@ class DashboardPage {
         return $('button=Approve');
     }
 
+    public get caLivestockOwnerRent() {
+        return $('input[type="radio"][name="ca_livestock_owner_rent"][value="1001"]');
+    }
+
+    public get hasRecommendationYes() {
+        return $('input[type="radio"][name="ca_livestock_recommendation"][value="1001"]');
+        
+    }
+
     public async login(username: string, password: string) {
         console.table({
             username: username,
@@ -233,61 +244,77 @@ class DashboardPage {
     }
 
     public async createCAForm(data: CAFormData) {
-        try {            
-            // choosing mcix family members
-            if (data.mcixFamilyMember === "yes") {
-                await expect(await this.mcixFamilyMembersYesRadio).toBeClickable();
-                await (await this.mcixFamilyMembersYesRadio).click();
-            } else {
-                await expect(await this.mcixFamilyMembersNoRadio).toBeClickable();
-                await (await this.mcixFamilyMembersNoRadio).click();
-            }
 
-            // Choosing Loan Purpose
-            const loanPurposeMenu = await this.loanPurposeOptionMenu;
-            await loanPurposeMenu.click();
-
-            const chosenOption = await $(`div*=${data.loan_purpose}`);
-            await chosenOption.click();
-
-            // Choosing business description
-            const businessDescriptionMenu = await (await $(`label*=${data.loan_purpose} (Business Description)`)).nextElement();
-            await expect(businessDescriptionMenu).toBeClickable();
-            await businessDescriptionMenu.click();
-            
-            // const options = await (await $('div[class="css-26l3qy-menu"]')).$$('div');
-            // console.log("Option count: ", options.length)
-            // const desiredBusinessDescriptionOption = "1000 - လယ်ယာ စိုက်ပျိုးရေး စပါး"
-            const desiredBusinessDescriptionOption = "1103 - နှစ်ရှည်သီးနှံ စိုက်ပျိုးရေး ထောပတ်ပင်"
-            const selectedSubOption = await $('div*=' + desiredBusinessDescriptionOption);
-            await selectedSubOption.click();
-
-            // Setting value in ချေးငွေကို မည်သည့်နေရာတွင်အသုံးပြုမည်နည်း input
-            const placeToUseLoan = await (await $('label*=ချေးငွေကို မည်သည့်နေရာတွင်အသုံးပြုမည်နည်း')).nextElement();
-            await placeToUseLoan.setValue("Automated Test");
-
-            // Setting value in ယခုလုပ်ငန်းလုပ်ကိုင်သည်မှာ နှစ်မည်မျှကြာခဲ့သနည်း။ input
-            const businessPeriod = await (await $('label*=ယခုလုပ်ငန်းလုပ်ကိုင်သည်မှာ နှစ်မည်မျှကြာခဲ့သနည်း။')).nextElement();
-            await businessPeriod.setValue(1); 
-
-            // Choosing business photo radio option
-            if (data.business_photo === "yes") {
-                await expect(await this.businessPhotoYesRadio).toBeClickable()
-                await (await this.businessPhotoYesRadio).click()
-            } else {
-                await expect(await this.businessPhotoNoRadio).toBeClickable()
-                await (await this.businessPhotoNoRadio).click()
-            }
-
-            // CA approved amount
-            const caApprovedAmountInput = await (await $('label*=CA မှ ထောက်ခံသော ပမာဏ')).nextElement();
-            await caApprovedAmountInput.setValue(100000);
-
-            await (await this.caFormSubmitBtn).waitForClickable({ timeout: 5000, timeoutMsg: "CA Form Submit Button was not Clickable" });
-            await (await this.caFormSubmitBtn).click();
-        } catch (error) {
-            console.log("Create CA Form Error: ", error);
+        // choosing mcix family members
+        if (data.mcixFamilyMember === "yes") {
+            await expect(await this.mcixFamilyMembersYesRadio).toBeClickable();
+            await (await this.mcixFamilyMembersYesRadio).click();
+        } else {
+            await expect(await this.mcixFamilyMembersNoRadio).toBeClickable();
+            await (await this.mcixFamilyMembersNoRadio).click();
         }
+
+        // Choosing business photo radio option
+        if (data.business_photo === "yes") {
+            await expect(await this.businessPhotoYesRadio).toBeClickable()
+            await (await this.businessPhotoYesRadio).click()
+        } else {
+            await expect(await this.businessPhotoNoRadio).toBeClickable()
+            await (await this.businessPhotoNoRadio).click()
+        }
+
+        // Choosing Loan Purpose
+        const loanPurposeMenu = await this.loanPurposeOptionMenu;
+        await loanPurposeMenu.click();
+
+        const chosenOption = await $(`div*=${data.loan_purpose}`);
+        await chosenOption.click();
+
+        // Choosing business description
+        const businessDescriptionMenu = await (await $(`label*=${data.loan_purpose} (Business Description)`)).nextElement();
+        await expect(businessDescriptionMenu).toBeClickable();
+        await businessDescriptionMenu.click();
+
+        const desiredBusinessDescriptionOption = data.descriptionOption;
+        const selectedSubOption = await $('div*=' + desiredBusinessDescriptionOption);
+        await selectedSubOption.click();
+
+        // rent or own
+        const isPlaceRentOrOwn = await this.caLivestockOwnerRent;
+        await isPlaceRentOrOwn.click();
+
+        // has recommendation or no
+        const hasRecommendation = await this.hasRecommendationYes;
+        await hasRecommendation.click();
+
+        // sale per month
+        const salePerMonthInput = await (await $('label*=လုပ်ငန်းမှ တစ်လ ရောင်းရငွေ')).nextElement();
+        await salePerMonthInput.setValue(500000);
+
+        // expense per month
+        const expensePerMonthInput = await (await $('label*=လုပ်ငန်းတွင် တစ်လ ကုန်ကျစရိတ်ငွေ')).nextElement();
+        await expensePerMonthInput.setValue(400000);
+
+        const {profitCalculateBtn, netProfitCalculateBtn} = await browser.waitUntil(async () => {
+            const calculationBtnList = await $$('svg.ca-calculation-icon.ms-2.ca-btn');
+
+            if (calculationBtnList.length < 2) {
+                return false;
+            }
+
+            return { profitCalculateBtn: calculationBtnList[0], netProfitCalculateBtn: calculationBtnList[1] }
+        });
+
+        await profitCalculateBtn.click();
+        await netProfitCalculateBtn.click();
+
+        // CA approved amount
+        const caRecommendedAmountInput = await (await $('label*=CA မှ ထောက်ခံသော ပမာဏ')).nextElement();
+        await caRecommendedAmountInput.setValue(800000);
+
+        await (await this.caFormSubmitBtn).waitForClickable({ timeout: 5000, timeoutMsg: "CA Form Submit Button was not Clickable" });
+        await (await this.caFormSubmitBtn).click();
+
     }
 
     public async gotoCAassessment(username: string, password: string) {
@@ -384,7 +411,11 @@ class DashboardPage {
         } catch (error) {
             console.error("CA Assessment button was not clicked!");
             throw error;
-        }    
+        }  
+        
+        const maximizeIcon = await caDashboardPage.caFormMaximizeBtn;
+        await maximizeIcon.waitForExist({ timeout: 8000 });
+        await maximizeIcon.click();
     }
 
     public async approveMultipleInterviews() {
@@ -393,6 +424,20 @@ class DashboardPage {
         await commentBox.setValue("Testing Approve");
 
         await browser.pause(3000);
+    }
+
+    public async waitForElementExistence(selector: string, timeoutMs: number) {
+        const startTime = Date.now();
+
+        while (Date.now() - startTime < timeoutMs) {
+            const isExisting = await $(selector).isExisting();
+            if (isExisting) {
+                return true; // Element found within the duration
+            }
+            await browser.pause(100); // Add a small pause between checks
+        }
+
+        return false; // Element not found before timeout
     }
 }
 

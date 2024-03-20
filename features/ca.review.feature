@@ -14,15 +14,15 @@ Feature: Making CA Review
 #     And I create CA Review Form
 #     Then I should see the success message: CA assessment create/update successfully.
 
-  Scenario: Making CA Review on Multiple Interviews Filtered with NgaSaYa Name
+  Scenario Outline: Making CA Review on Multiple Interviews Filtered with NgaSaYa Name
     Given I have successfully logged in with <username> and <password>
     When I navigate to Interview Results tab
     And I search <ngaSaYaName> in search box
     And I make multiple CA Reviews: CA credentials <username>, <password>
 
-    Examples: 
+    Examples:
       | username | password | clientName | ngaSaYaName                |
-      | chanmk   |      123 | Naing Si   | G0179824700THPU_0000000001 |
+      | chanmk   | train    | Naing Si   | G0087024945THPU_0000000001 |
 
 # G0087324408THPU_0000000001 => pending
 # G0087024919THPU_0000000001

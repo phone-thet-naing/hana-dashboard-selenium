@@ -16,6 +16,8 @@
     "ca-review": "npm run wdio -- --spec features/ca.review.feature",
     "callcenter": "npm run wdio -- --spec features/database.feature",
     "approve": "npm run wdio -- --spec features/approve.feature",
-    "undo": "npm run wdio -- --spec features/undo.ngasaya.feature"
+    "undo": "npm run wdio -- --spec features/undo.ngasaya.feature",
+    "sca": "npm run wdio -- --spec features/specific.ca.review.feature",
+    "adc": "npm run wdio -- --spec features/approve.data.changes.feature"
   }
 }

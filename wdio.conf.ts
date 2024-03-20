@@ -65,7 +65,7 @@ export const config: Options.Testrunner = {
             browserName: 'chrome',
             'goog:chromeOptions': {
                 args: [
-                    // "--incognito"
+                    "--incognito"
                 ]
             }
         },

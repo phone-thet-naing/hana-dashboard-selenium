@@ -2,6 +2,7 @@ import { Then } from "@wdio/cucumber-framework"
 import { expect, $ } from "@wdio/globals"
 import DashboardPage from "../pageobjects/dashboard.page.js"
 import { getCurrentDateTime, writeJSON } from "../../utility/util.js"
+import caDashboardPage from "../pageobjects/ca-dashboard.page.js"
 
 export interface NewData {
     time: string,
@@ -113,4 +114,20 @@ Then("I should see success message for Query Insert", async () => {
 
 Then("The screen should match the screen shot", async function () {
 
+})
+
+Then("I create CA Assessment", async () => {
+    await caDashboardPage.createCAassessment();
+    await browser.pause(5000);
+})
+
+Then("I approve data changes", async () => {
+    const approveDataChangesBtn = await $('button[data-target="#approveConfirmBox"]');
+    await approveDataChangesBtn.click();
+
+    const approveButton = await $('button[type="submit"][form="update_form"].btn-approve[name="action"][value="approve"]');
+    await approveButton.waitForExist();
+    await approveButton.click();
+
+    await browser.pause(2000);    
 })
