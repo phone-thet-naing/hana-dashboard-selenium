@@ -8,6 +8,7 @@ Feature: Making CA Review
 
   Examples:
       | interviewId                           | caId  |
-      # | d3cd84ef-af17-4242-a7b3-d33af3028589  | 479   |
-      | 277e762a-b575-4350-bef6-6fae179b9bb4  | 479   |
-      | 264096bc-4b02-4716-9547-82535000662a  | 479   |
+      | b8cf1acb-c9c9-49f2-a0a5-538512a3f5e9  | 479   |
+      # | bc4d2e6b-f026-4f8b-98d8-201a81ba98a5  | 479   |
+      # | d6ee96b0-ecb7-440b-a6c8-a9b37fc6cea2  | 479   |
+      # | 551d0e69-c489-4035-86f1-29ef581a6e72  | 479   |

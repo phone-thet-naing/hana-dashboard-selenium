@@ -71,7 +71,7 @@ Given("I am on CA Login for {} and {}", async (interviewId, caId) => {
     }
 
     const elementSelector = 'h3=Welcome to CA Assessment';
-    const timeoutMs = 5000; // 5 seconds
+    const timeoutMs = 7000; // 7 seconds
 
     const isElementFound = await waitForElementExistence(elementSelector, timeoutMs);
 
@@ -94,4 +94,25 @@ Given("I am on {} details", async (interviewClientId) => {
     } else {
         await browser.maximizeWindow();
     }
+})
+
+Given ("I am on loan approval page of {}", async (interviewId) => {
+    const credentials = {
+        username: "cac",
+        password: "123"
+    }
+
+    await browser.maximizeWindow();
+    await browser.url(`https://dashboard-uat.hanamicrofinance.net/interview-results/${interviewId}`);
+    await browser.pause(2000);
+    const selector = 'input[name="user_name"]';
+
+    const isElementFound = await (await $(`${selector}`)).isDisplayed();
+
+    // const labelFound = await DashboardPage.waitForElementExistence(selector, 7000);
+    // console.table({ labelFound, i });
+
+    if (isElementFound) {
+        await DashboardPage.login(credentials.username, credentials.password);
+    }     
 })

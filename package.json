@@ -18,6 +18,7 @@
     "approve": "npm run wdio -- --spec features/approve.feature",
     "undo": "npm run wdio -- --spec features/undo.ngasaya.feature",
     "sca": "npm run wdio -- --spec features/specific.ca.review.feature",
+    "sla": "npm run wdio -- --spec features/specific.approve.feature",
     "adc": "npm run wdio -- --spec features/approve.data.changes.feature"
   }
 }

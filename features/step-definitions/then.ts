@@ -131,3 +131,40 @@ Then("I approve data changes", async () => {
 
     await browser.pause(2000);    
 })
+
+Then("I {} loan with {}", async (option, amount) => {
+    console.table({option});
+    const commentTextarea = await $('textarea[name="comment"]');
+    const approveButton = await $('button[data-target="#approve-popup"]');  // Targets by data attribute value
+    // const foApprovedAmountText = await $('#approve-popup > div > div > div.modal-body > div.form-group.first > div > p > b');
+    const approveAmountInput = await $('#approve_amount');
+    const agreeGroupButton = await $('#agreeGroupButton');
+    
+    // const value = await foApprovedAmountText.getValue();
+    // const approvedAmount = parseInt(value.replace(",", ""));
+    // console.table({ value });
+
+    await commentTextarea.setValue("approve test, " + Date.now().toString());
+
+    await approveButton.click();
+
+    // await foApprovedAmountText.waitForExist();
+
+    // console.table({ approvedAmount, numeral: approvedAmount });
+
+    await approveAmountInput.setValue(amount);
+
+    const disbursementDateInput = await $('input[name="last_disbursement_date"]');
+    const repaymentDateInput = await $('input[name="approval_first_repayment_date"]');
+
+    if (await disbursementDateInput.isDisplayed()) {
+        await disbursementDateInput.click();
+        await browser.pause(100);
+        await repaymentDateInput.click();
+        await browser.pause(100);
+    }    
+
+    await agreeGroupButton.click();
+
+    await browser.pause(5000);
+})

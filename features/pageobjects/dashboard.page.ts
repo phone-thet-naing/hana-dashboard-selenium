@@ -159,10 +159,6 @@ class DashboardPage {
     }
 
     public async login(username: string, password: string) {
-        console.table({
-            username: username,
-            password: password
-        })
         await this.username.setValue(username)
         await this.password.setValue(password)
         await this.loginBtn.click()
@@ -434,7 +430,7 @@ class DashboardPage {
             if (isExisting) {
                 return true; // Element found within the duration
             }
-            await browser.pause(100); // Add a small pause between checks
+            await browser.pause(500); // Add a small pause between checks
         }
 
         return false; // Element not found before timeout

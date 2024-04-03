@@ -1,4 +1,6 @@
 import type { Options } from '@wdio/types'
+import * as path from 'path'
+
 export const config: Options.Testrunner = {
     //
     // ====================
@@ -61,17 +63,18 @@ export const config: Options.Testrunner = {
     // https://saucelabs.com/platform/platform-configurator
     //
     capabilities: [
-        {
-            browserName: 'chrome',
-            'goog:chromeOptions': {
-                args: [
-                    "--incognito"
-                ]
-            }
-        },
         // {
-        //     browserName: 'firefox'
-        // }
+        //     browserName: 'chrome',
+        //     'goog:chromeOptions': {
+        //         binary: 'https://storage.googleapis.com/chrome-for-testing-public/123.0.6312.86/win64/chromedriver-win64.zip',
+        //         args: [
+        //             "--incognito"
+        //         ]
+        //     }
+        // },
+        {
+            browserName: 'edge'
+        }
     ],
 
     //
