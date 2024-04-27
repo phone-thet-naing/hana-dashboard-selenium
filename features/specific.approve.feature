@@ -2,10 +2,11 @@ Feature: Loan Approve
 
  Scenario Outline: Making specific loan approve 
     Given I am on loan approval page of <interviewId>
-    Then I <option> loan with <amount>
+    When I approve the loan
 
     Examples:
-        | interviewId                          | option  | amount |
-        | a34f3e87-f53f-443f-9174-4d4f120fcfad | approve | 800000 |
-        | 9a3f5596-c39e-44a9-bd36-c60f94b5e6f8 | approve | 800000 |  
-        | 5e3b728a-17b9-497f-b1d9-a553fe4b0da7 | approve | 800000 |  
+        | interviewId                          |
+        | 684a7b35-84b2-40a3-8e8c-c695a8da9a94 | 
+        | bbe208ca-18f7-4fa7-99cb-b9db712ba748 | 
+        | b0a087be-1021-4ad3-b53d-5f6d812b77c0 | 
+        # | 531039ea-d60f-491e-b367-823ac4605fc5 | // example loan

@@ -123,6 +123,13 @@ export function addInterviewStatus(status: string) {
     })
 }
 
+export function getSearchInterviewQuery(ngasayaName: string) {
+    return `SELECT db_interviews.id FROM db_appointment_clients
+            LEFT JOIN db_ngasayas ON db_ngasayas.group_id = db_appointment_clients.group_id
+            LEFT JOIN db_interviews ON db_interviews.appointment_client_id = db_appointment_clients.id
+            WHERE db_ngasayas.name="${ngasayaName}"`
+}
+
 export function getCallCenterQuery({interview_id, call_date, created_at, updated_at, ca_assessment_date}) {
     return `INSERT INTO
     dp_call_center(id, interview_id, call_status, call_date, remark, uploaded_by, created_at, updated_at)

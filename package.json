@@ -4,7 +4,7 @@
   "devDependencies": {
     "@wdio/cli": "^8.24.16",
     "@wdio/cucumber-framework": "^8.24.13",
-    "@wdio/globals": "^8.24.12",
+    "@wdio/globals": "^8.35.1",
     "@wdio/local-runner": "^8.24.12",
     "@wdio/spec-reporter": "^8.24.12",
     "ts-node": "^10.9.1",
@@ -18,7 +18,9 @@
     "approve": "npm run wdio -- --spec features/approve.feature",
     "undo": "npm run wdio -- --spec features/undo.ngasaya.feature",
     "sca": "npm run wdio -- --spec features/specific.ca.review.feature",
-    "sla": "npm run wdio -- --spec features/specific.approve.feature",
-    "adc": "npm run wdio -- --spec features/approve.data.changes.feature"
+    "specific-approve": "npm run wdio -- --spec features/specific.approve.feature",
+    "adc": "npm run wdio -- --spec features/approve.data.changes.feature",
+    "get-interview-id": "npm run wdio -- --spec features/get.interview.id.feature",
+    "test": "npm run wdio -- --spec features/test.feature"
   }
 }

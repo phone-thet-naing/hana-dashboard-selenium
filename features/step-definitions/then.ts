@@ -168,3 +168,24 @@ Then("I {} loan with {}", async (option, amount) => {
 
     await browser.pause(5000);
 })
+
+Then("I should get the interview ids back", async () => {
+    const interviewIds = await browser.waitUntil(async () => {
+        const elements = await $$('td[class="data-text"][data-decimals="0"]')
+
+        if (elements.length < 3) {
+            return 
+        }
+
+        return elements
+    })
+
+    if (interviewIds) {
+        for (const [i, element] of interviewIds?.entries()) {
+            console.log("interview ", i, " ", await element.getValue())
+        }
+    }
+
+    await browser.pause(10 * 1000)
+})
+

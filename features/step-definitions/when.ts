@@ -2,7 +2,7 @@ import { When } from "@wdio/cucumber-framework"
 import { browser } from "@wdio/globals";
 
 import DashboardPage from "../pageobjects/dashboard.page.js"
-import { addInterviewStatus, getCallCenterQuery, getCurrentDateTime, getCurrentEpochTime, writeJSON } from "../../utility/util.js";
+import { addInterviewStatus, getCallCenterQuery, getCurrentDateTime, getCurrentEpochTime, writeJSON, getSearchInterviewQuery } from "../../utility/util.js";
 import CAdashboardPage from "../pageobjects/ca-dashboard.page.js";
 
 interface MapperType {
@@ -332,5 +332,82 @@ When("I set FO to {}", async (foName) => {
     const foFilter = await DashboardPage.foFilter;
     console.log(await foFilter.getText()); // expected value: -- Select FO name --
     await foFilter.selectByVisibleText(foName);
+})
+
+When("I have passed {} as Parameter", async (ngasayaName) => {
+    await DashboardPage.navigateToDatabaseSQLQuerySection()
+
+    await browser.pause(2000)
+
+    const sqlQuery = getSearchInterviewQuery(ngasayaName)
+
+    await browser.keys(sqlQuery)
+
+    const submitQueryBtn = await $('input[id="button_submit_query"][value="Go"]');
+    await submitQueryBtn.waitForClickable({ timeoutMsg: "Submit button not clickable" });
+
+    await submitQueryBtn.click()
+
+    await browser.pause(2 * 1000)
+})
+
+When("The test code runs", async () => {
+    await browser.url("https://www.google.com/")
+    await browser.maximizeWindow()
+
+    async function waitForElement(selector, timeout) {
+        await browser.waitUntil(async () => {
+            const element = await $(selector)
+            return await element.isDisplayed()
+        }, { timeout: timeout })
+        return await browser.$(selector)
+    }
+
+    // const elementIsFound = await (async () => {
+    //     return await element.isDisplayed()
+    // }, { timeout: 3000 })
+
+
+
+    // console.table("Element was found: ", elementIsFound)
+
+    await browser.pause(3000)
+})
+
+When("I approve the loan", async () => {
+    const commentBox = await $('textarea[name="comment"]')
+
+    await commentBox.setValue("Approve using Selenium! " + String(new Date()))
+
+    const approveBtn = await $('button=Approve')
+    await approveBtn.isDisplayedInViewport()
+    await approveBtn.click()
+
+    const callCenterNotVerifiedPopUp = 'div[id="notapprovecallcenter-popup"]'
+    if (await DashboardPage.waitForElementExistence(callCenterNotVerifiedPopUp, 1000)) {
+        throw new Error("Call center has not been verified!")
+    } 
+
+    const foApprovedAmountElement = await $('#approve-popup > div > div > div.modal-body > div.form-group.first > div > p > b')
+    const caApprovedAmount = (await foApprovedAmountElement.getText()).split(",").join("")
+
+    const approveAmountInput = await $('input[id="approve_amount"]')
+    await approveAmountInput.setValue(caApprovedAmount)
+
+    const disbursementDateInput = await $('input[name="last_disbursement_date"]')
+
+    if (await disbursementDateInput.isDisplayed()) {
+        const presentTime = new Date().toISOString().slice(0, 19).replace('T', ' ')
+        await disbursementDateInput.click()
+        await disbursementDateInput.setValue(presentTime)
+        await browser.keys('Enter')
+
+        // const firstRepaymentDateInput = await $('input[name="approval_first_repayment_date"]')
+        // await firstRepaymentDateInput.click()
+    }
+
+    const approveAgreeBtn = await $('button[id="agreeGroupButton"]')
+    await approveAgreeBtn.click()
+    // await browser.pause(10000)
 })
 

@@ -1,6 +1,6 @@
 import { $, browser } from "@wdio/globals"
 import * as fs from "fs"
-import { addInterviewStatus, getCallCenterQuery, getCurrentDateTime } from "../../utility/util.js"
+import { addInterviewStatus, getCallCenterQuery, getCurrentDateTime, getSearchInterviewQuery } from "../../utility/util.js"
 import caDashboardPage from "./ca-dashboard.page.js";
 
 const dashboardUrl: string = "https://dashboard-uat.hanamicrofinance.net/login"
@@ -67,7 +67,7 @@ class DashboardPage {
         return $('#root > div > div.d-flex.flex-column.p-3.shadow.border.ca-radius.ca-popup-top.w-auto.ca-open > div > nav > div:nth-child(1)')
         // return $('div*=View Assessment')
     }
-    
+
     public get undoNgasayaOptionBtn() {
         return $("div*=Undo Ngasaya");
     }
@@ -95,7 +95,7 @@ class DashboardPage {
     public get btnFilter() {
         return $('button[id="btnSearchTable"]');
     }
-    
+
     public get btnReset() {
         return $('button[id="btnResetTable"]');
     }
@@ -155,7 +155,7 @@ class DashboardPage {
 
     public get hasRecommendationYes() {
         return $('input[type="radio"][name="ca_livestock_recommendation"][value="1001"]');
-        
+
     }
 
     public async login(username: string, password: string) {
@@ -178,14 +178,14 @@ class DashboardPage {
         if (await browser.isAlertOpen()) {
             await browser.dismissAlert();
         }
-    
+
         // Navigate to Interview Results 
         const firstInterviewResultTab = await this.firstInterviewResultsTab;
         await firstInterviewResultTab.click();
-        
+
         const secondInterviewResultTab = await this.secondInterviewResultsTab;
         await secondInterviewResultTab.click();
-    
+
         const heading = "Interview Results"
         await expect(await $(`h1*=${heading}`)).toExist();
     }
@@ -212,19 +212,19 @@ class DashboardPage {
         // Inserting Call Center Query Data
         const callCenterQueries = interviewList.map((interview_id) => {
             const currentDateTime = getCurrentDateTime("yyyy-mm-dd");
-            
+
             const queryData = {
-                interview_id: interview_id, 
-                call_date: currentDateTime, 
-                created_at: currentDateTime, 
-                updated_at: currentDateTime, 
+                interview_id: interview_id,
+                call_date: currentDateTime,
+                created_at: currentDateTime,
+                updated_at: currentDateTime,
                 ca_assessment_date: currentDateTime
             }
 
             const callCenterQuery = getCallCenterQuery(queryData);
 
             return callCenterQuery;
-        })    
+        })
 
         const submitQueryBtn = await $('input[id="button_submit_query"][value="Go"]');
         await submitQueryBtn.waitForClickable({ timeoutMsg: "Submit button not clickable" });
@@ -291,7 +291,7 @@ class DashboardPage {
         const expensePerMonthInput = await (await $('label*=လုပ်ငန်းတွင် တစ်လ ကုန်ကျစရိတ်ငွေ')).nextElement();
         await expensePerMonthInput.setValue(400000);
 
-        const {profitCalculateBtn, netProfitCalculateBtn} = await browser.waitUntil(async () => {
+        const { profitCalculateBtn, netProfitCalculateBtn } = await browser.waitUntil(async () => {
             const calculationBtnList = await $$('svg.ca-calculation-icon.ms-2.ca-btn');
 
             if (calculationBtnList.length < 2) {
@@ -318,25 +318,25 @@ class DashboardPage {
 
         const button = await $(`=View CA Assessment`)
         await button.click()
-    
+
         // Switch focus on the new window tab
         const handles = await browser.getWindowHandles();
         await browser.switchToWindow(handles[1])
-    
+
         // If 404 occurs, throw error and fail the test
         if (await notFoundMsg.isDisplayed()) {
             console.log("404 Not Found error occured")
-    
+
             const error = "Unexpected 404 Not Found Error Occurred!"
-    
+
             throw error;
         }
-    
+
         // In test automation, since a blank Chrome profile is used, we have to login for the CA dashboard as well.    
         const title = await $('h3*=Welcome to CA Assessment')
         await title.waitForDisplayed({ timeoutMsg: "CA Assessment title was not displayed" })
-    
-        await this.caLogin(username, password)           
+
+        await this.caLogin(username, password)
     }
 
     public async gotoCAassessmentWhenDoingMultipleInterviews(username: string, password: string) {
@@ -348,33 +348,33 @@ class DashboardPage {
 
         // Switch to CA Dashboard View
         await browser.newWindow(caAssessmentBtnUrl, { windowName: "ca_view" });
-    
+
         /*
         // Switch focus on the new window tab
         const handles = await browser.getWindowHandles();
         await browser.switchToWindow(handles[1])
         */
-    
+
         const notFoundMsg = await $('h1*=404 Not Found');
         // If 404 occurs, throw error and fail the test
         if (await notFoundMsg.isDisplayed()) {
             console.log("404 Not Found error occured")
-    
+
             const error = "Unexpected 404 Not Found Error Occurred!"
-    
+
             throw error;
         }
-    
+
         // In test automation, since a blank Chrome profile is used, we have to login for the CA dashboard as well.    
         const title = await $('h3*=Welcome to CA Assessment');
 
         try {
             await title.waitForDisplayed({ timeout: 5000 });
             console.log("Welcome to CA Assessment was displayed, performing caLogin");
-            await this.caLogin(username, password);           
+            await this.caLogin(username, password);
         } catch (error) {
             console.log("Welcome to CA Assessment was not displayed");
-        } 
+        }
     }
 
     public async chooseCAassessmentOption() {
@@ -393,7 +393,7 @@ class DashboardPage {
         } catch (error) {
             console.error("Three dot menu was not clicked!");
             throw error
-        }        
+        }
 
         const caAssessmentBtn = await this.viewAssessmentOptionBtn;
         // Click the selected option
@@ -403,12 +403,12 @@ class DashboardPage {
                 timeout: 5000,
                 timeoutMsg: "CA Assessment button was not clickable after timeout"
             });
-            await caAssessmentBtn.click();  
+            await caAssessmentBtn.click();
         } catch (error) {
             console.error("CA Assessment button was not clicked!");
             throw error;
-        }  
-        
+        }
+
         const maximizeIcon = await caDashboardPage.caFormMaximizeBtn;
         await maximizeIcon.waitForExist({ timeout: 8000 });
         await maximizeIcon.click();
@@ -425,7 +425,7 @@ class DashboardPage {
     public async waitForElementExistence(selector: string, timeoutMs: number) {
         const startTime = Date.now();
 
-        while (Date.now() - startTime < timeoutMs) {
+        while (Math.max(Date.now() - startTime, 1) < timeoutMs) {
             const isExisting = await $(selector).isExisting();
             if (isExisting) {
                 return true; // Element found within the duration
@@ -434,6 +434,31 @@ class DashboardPage {
         }
 
         return false; // Element not found before timeout
+    }
+
+    public async navigateToDatabaseSQLQuerySection() {
+        const uatPlusIcon = await $('li.last.navGroup img.ic_b_plus');
+        await expect(uatPlusIcon).toBeClickable();
+        await uatPlusIcon.click();
+
+        const dbUatDashboard = await $('a*=uat_dashboard');
+        await expect(dbUatDashboard).toBeClickable();
+        await dbUatDashboard.click();
+
+        const actionEventsTableName = await $('a*=action_events');
+        await actionEventsTableName.waitForExist({ timeoutMsg: "Action Event table not visible" });
+
+        // await browser.pause(10000)
+
+        const sqlTab = await $('a*=SQL');
+        await expect(sqlTab).toBeClickable();
+        await sqlTab.click();
+    }
+
+    public async navigateToURL(url: string) {
+        await browser.maximizeWindow();
+        await browser.url(url);
+        await browser.pause(2000);
     }
 }
 

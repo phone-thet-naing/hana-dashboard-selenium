@@ -39,11 +39,7 @@ Given("I have logged into database", async () => {
     await btnGo.click();
 
     const phpMyAdminImg = await $('img[id="imgpmalogo"]');
-    await expect(phpMyAdminImg).toExist();
-
-
-    // Insert Call Center Data
-    
+    await expect(phpMyAdminImg).toExist();    
 })
 
 Given("I am on CA Login for {} and {}", async (interviewId, caId) => {
@@ -71,8 +67,8 @@ Given("I am on CA Login for {} and {}", async (interviewId, caId) => {
     }
 
     const elementSelector = 'h3=Welcome to CA Assessment';
-    const timeoutMs = 7000; // 7 seconds
-
+    const timeoutMs = 10000;
+    
     const isElementFound = await waitForElementExistence(elementSelector, timeoutMs);
 
     if (isElementFound) {
@@ -102,17 +98,13 @@ Given ("I am on loan approval page of {}", async (interviewId) => {
         password: "123"
     }
 
-    await browser.maximizeWindow();
-    await browser.url(`https://dashboard-uat.hanamicrofinance.net/interview-results/${interviewId}`);
-    await browser.pause(2000);
-    const selector = 'input[name="user_name"]';
+    await DashboardPage.navigateToURL(`https://dashboard-uat.hanamicrofinance.net/interview-results/${interviewId}`)
+    const selector = 'p[class="login-box-msg"]'
 
-    const isElementFound = await (await $(`${selector}`)).isDisplayed();
-
-    // const labelFound = await DashboardPage.waitForElementExistence(selector, 7000);
-    // console.table({ labelFound, i });
+    const isElementFound = await DashboardPage.waitForElementExistence(selector, 5000)
 
     if (isElementFound) {
         await DashboardPage.login(credentials.username, credentials.password);
     }     
 })
+
